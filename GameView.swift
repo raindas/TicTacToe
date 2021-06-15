@@ -102,7 +102,7 @@ struct GameView: View {
                                 }
                             }.disabled(viewModel.isGameboardDisabled)
                             .padding()
-                        }
+                    }
                     
                     Spacer()
                     
@@ -126,11 +126,14 @@ struct GameView: View {
                     .font(.system(size: 40.0))
                     .padding(.horizontal,30.0)
                     
-                    Spacer()
                     
-                }
+                }.fullScreenCover(isPresented: self.$viewModel.statusView, content: {
+                    
+                    GameWinStatusView(title: viewModel.winStatus, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot")).environmentObject(self.viewModel)
+                })
             }
         }
+        
         
     }
 }

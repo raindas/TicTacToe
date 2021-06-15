@@ -74,8 +74,6 @@ struct ContentView: View {
                     .font(.system(size: 40.0))
                     .padding(.horizontal,30.0)
                     
-                    Spacer()
-                    
                 }
             }.navigationBarHidden(true)
         }

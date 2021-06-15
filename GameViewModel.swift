@@ -20,10 +20,9 @@ final class GameViewModel: ObservableObject {
     
     @Published var userSide = ""
     
-    var playerSide = ""
-    var botSide = ""
+    @Published var winStatus = ""
     
-    
+    @Published var statusView = false
     
     @Published var moves:[Move?] = Array(repeating: nil, count: 9)
     @Published var isGameboardDisabled = false
@@ -77,8 +76,10 @@ final class GameViewModel: ObservableObject {
         if checkWinCondition(for: .human, in: moves) {
             // alertItem = AlertContext.humanWin
             playerScore += 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [self] in
-                resetGame()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+                winStatus = "you won"
+                statusView.toggle()
+               // resetGame()
             }
             
             return
@@ -111,8 +112,10 @@ final class GameViewModel: ObservableObject {
             if checkWinCondition(for: .computer, in: moves) {
                 // alertItem = AlertContext.computerWin
                 computerScore += 1
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [self] in
-                    resetGame()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+                    //resetGame()
+                    winStatus = "you lost"
+                    statusView.toggle()
                 }
                 return
             }
