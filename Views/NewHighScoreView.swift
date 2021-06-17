@@ -12,13 +12,7 @@ struct NewHighScoreView: View {
     @EnvironmentObject var viewModel: GameViewModel
     
     // local variables
-    let title: String
-    let winStatus: Bool
-    let userScore: Int
-    let userSide: String
-    let botType: String
-    let botScore: Int
-    let botSide: String
+    let highScore: Int
     
     // custom colors
     let gameColor = GameColor()
@@ -30,111 +24,67 @@ struct NewHighScoreView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
-        VStack {
+        
+        ZStack {
+            BackgroundBlurView()
             
-            Spacer()
-            
-            Text(title)
-                .font(.custom("ChocoCrunch", size: 30))
-                .foregroundColor(.white)
-            Text("status: \(String(winStatus))")
-                .font(.custom("ChocoCrunch", size: 30))
-                .foregroundColor(.white)
-            Spacer()
-            HStack {
+            VStack {
+                Image("confetti")
+                    .resizable()
                 
                 Spacer()
-                VStack {
-                    Text("you")
+                
+                Group {
+                    Text("new high score")
+                    Text(String(highScore)).font(.custom("ChocoCrunch", size: 80))
+                }.font(.custom("ChocoCrunch", size: 30))
+                .foregroundColor(.white)
+                
+                Spacer()
+                
+                Button(action: {
+                    viewModel.resetGameRound()
+                    viewModel.winStatusView.toggle()
+                    viewModel.newHighScoreView.toggle()
+                }, label: {
+                    Text("play next round")
                         .font(.custom("ChocoCrunch", size: 20))
-                    Text(String(userScore))
-                        .font(.custom("ChocoCrunch", size: 50))
-                    Text(userSide)
-                        .font(.custom("Maler", size: 40))
-                        .foregroundColor(viewModel.getSideColor(indicator: userSide))
-                }
-                .foregroundColor(.white)
-                .frame(width: 136, height: 172, alignment: .center)
-                .background(gameColor.palletpurple)
-                .cornerRadius(25.0)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 25.0)
-                        .stroke(gameColor.steelblue, lineWidth: 2)
-                )
+                        .padding(.vertical,15.5)
+                        .padding(.horizontal,20.5)
+                        .foregroundColor(.white)
+                        .background(gameColor.pink)
+                        .cornerRadius(15.0)
+                })
                 
                 Spacer()
                 
-                VStack {
-                    Text(botType)
+                Button(action: {
+                    mainMenuButtonClicked.toggle()
+                    viewModel.winStatusView.toggle()
+                    viewModel.newHighScoreView.toggle()
+                }, label: {
+                    Text("main menu")
                         .font(.custom("ChocoCrunch", size: 20))
-                    Text(String(botScore))
-                        .font(.custom("ChocoCrunch", size: 50))
-                    Text(botSide)
-                        .font(.custom("Maler", size: 40))
-                        .foregroundColor(viewModel.getSideColor(indicator: botSide))
-                }
-                .foregroundColor(.white)
-                .frame(width: 136, height: 172, alignment: .center)
-                .background(gameColor.palletpurple)
-                .cornerRadius(25.0)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 25.0)
-                        .stroke(gameColor.steelblue, lineWidth: 2)
-                )
+                        .padding(.vertical,10.5)
+                        .padding(.horizontal,29.5)
+                        .foregroundColor(.white)
+                        .background(gameColor.orange)
+                        .cornerRadius(9.0)
+                })
                 
-                Spacer()
+                
+                Image("confetti")
+                    .resizable()
+                    .rotation3DEffect(.degrees(180), axis: (x: 1, y: 0, z: 0))
             }
             
-            Spacer()
-            
-            Button(action: {
-                viewModel.resetGameRound()
-                viewModel.statusView.toggle()
-                //self.presentationMode.wrappedValue.dismiss()
-                
-            }, label: {
-                Text("play next round")
-                    .font(.custom("ChocoCrunch", size: 20))
-                    .padding(.vertical,15.5)
-                    .padding(.horizontal,20.5)
-                    .foregroundColor(.white)
-                    .background(gameColor.pink)
-                    .cornerRadius(15.0)
-            })
-            
-            Spacer()
-            
-            Button(action: {
-                mainMenuButtonClicked.toggle()
-                viewModel.statusView.toggle()
-                //    showHomeView.toggle()
-                //                UIApplication.shared.windows.last?.rootViewController?.dismiss(animated: true, completion: {print("view changed")})
-                //                poo.toggle()
-               
-                
-            }, label: {
-                Text("main menu")
-                    .font(.custom("ChocoCrunch", size: 20))
-                    .padding(.vertical,10.5)
-                    .padding(.horizontal,29.5)
-                    .foregroundColor(.white)
-                    .background(gameColor.orange)
-                    .cornerRadius(9.0)
-            })
-//            .fullScreenCover(isPresented: $showHomeView,
-//                               onDismiss: didDismiss){
-//                               ContentView()
-//
-//            }
-            
-            Spacer()
-            
-        }.background(BackgroundBlurView()).edgesIgnoringSafeArea(.all)
+        }.ignoresSafeArea()
+        
     }
 }
 
 struct NewHighScoreView_Previews: PreviewProvider {
     static var previews: some View {
-        NewHighScoreView(title: "you won", winStatus: true, userScore: 5, userSide: "O", botType: "easy bot", botScore: 2, botSide: "X", mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel())
+        NewHighScoreView(highScore: 501, mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel())
     }
 }

@@ -17,18 +17,19 @@ final class GameViewModel: ObservableObject {
     private var gameColor = GameColor()
     
     @Published var gameDifficulty = ""
-    
     @Published var userSide = ""
-    
     @Published var winStatus = ""
     
-    // sheets
-    @Published var statusView = false
+    // presentation views
+    @Published var winStatusView = false
+    @Published var newHighScoreView = false
+    
     
     @Published var moves:[Move?] = Array(repeating: nil, count: 9)
     @Published var isGameboardDisabled = false
     @Published var playerScore = 0
     @Published var computerScore = 0
+    @Published var highScore = 0
     //@Published var alertItem: AlertItem?
     
     func getSide(player:String) -> String {
@@ -77,9 +78,13 @@ final class GameViewModel: ObservableObject {
         if checkWinCondition(for: .human, in: moves) {
             // alertItem = AlertContext.humanWin
             playerScore += 1
+            if highScore < playerScore {
+                highScore += 1
+                newHighScoreView.toggle()
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
                 winStatus = "you won"
-                statusView.toggle()
+                winStatusView.toggle()
                 // resetGame()
             }
             
@@ -116,7 +121,7 @@ final class GameViewModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
                     //resetGame()
                     winStatus = "you lost"
-                    statusView.toggle()
+                    winStatusView.toggle()
                 }
                 return
             }

@@ -47,7 +47,7 @@ struct DifficultyView: View {
                         
                         NavigationLink("",destination:GameView().navigationBarBackButtonHidden(true).navigationBarHidden(true),isActive: $showGameView)
                         Button(action: {
-                            viewModel.statusView = false
+                            viewModel.winStatusView = false
                             viewModel.gameDifficulty = "easy bot"
                             showGameView.toggle()
                         }, label: {

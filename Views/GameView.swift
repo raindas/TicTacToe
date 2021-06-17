@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-enum ActiveSheet: Identifiable {
-    case homeView, winStatusView
-    
-    var id: Int {
-        hashValue
-    }
-}
-
 struct GameView: View {
     
     @EnvironmentObject var viewModel: GameViewModel
@@ -40,7 +32,7 @@ struct GameView: View {
                 
                 VStack {
                     
-                    Text("high score : \(String(viewModel.statusView))")
+                    Text("high score : \(String(viewModel.winStatusView))")
                         .font(.custom("ChocoCrunch", size: 20))
                         .foregroundColor(.white)
                     
@@ -148,9 +140,14 @@ struct GameView: View {
                     .padding(.horizontal,30.0)
                     
                     
-                }.fullScreenCover(isPresented: self.$viewModel.statusView, onDismiss: didDismiss, content: {
+                }.fullScreenCover(isPresented: self.$viewModel.winStatusView, onDismiss: didDismiss, content: {
                     
-                    GameWinStatusView(title: viewModel.winStatus, winStatus:viewModel.statusView, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot"), mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                    if viewModel.newHighScoreView {
+                        NewHighScoreView(highScore: viewModel.highScore, mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                    } else {
+                        GameWinStatusView(title: viewModel.winStatus, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot"), mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                    }
+                    
                 })
                 .alert(isPresented: $showAlert, content: {
                     Alert(
@@ -160,6 +157,7 @@ struct GameView: View {
                             //print("yes selected")
                             viewModel.resetEntireGame()
                             showMainMenuView.toggle()
+                            showAlert.toggle()
                             //self.presentationMode.wrappedValue.dismiss()
                         },
                         secondaryButton: .default(Text("No"))
@@ -181,7 +179,7 @@ struct GameView: View {
             // to home page
             showAlert.toggle()
             //viewModel.statusView = false
-            print(String(viewModel.statusView))
+            print(String(viewModel.winStatusView))
         } else {
             print("just dismissed!")
         }

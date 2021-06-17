@@ -15,11 +15,11 @@ struct pooView: View {
     
     var body: some View {
         Button("Present FullScreen") {
-            viewModel.statusView.toggle()
-        }.fullScreenCover(isPresented: self.$viewModel.statusView, onDismiss: didDismiss, content: {
+            viewModel.winStatusView.toggle()
+        }.fullScreenCover(isPresented: self.$viewModel.winStatusView, onDismiss: didDismiss, content: {
             VStack {
                 Text("A full screen modal").font(.title)
-                Button(action: {viewModel.statusView.toggle()}, label: {
+                Button(action: {viewModel.winStatusView.toggle()}, label: {
                     Text("Tap to dismiss")
                 })
             }

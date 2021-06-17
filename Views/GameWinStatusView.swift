@@ -13,7 +13,6 @@ struct GameWinStatusView: View {
     
     // local variables
     let title: String
-    let winStatus: Bool
     let userScore: Int
     let userSide: String
     let botType: String
@@ -36,9 +35,6 @@ struct GameWinStatusView: View {
             Spacer()
             
             Text(title)
-                .font(.custom("ChocoCrunch", size: 30))
-                .foregroundColor(.white)
-            Text("status: \(String(winStatus))")
                 .font(.custom("ChocoCrunch", size: 30))
                 .foregroundColor(.white)
             Spacer()
@@ -90,7 +86,7 @@ struct GameWinStatusView: View {
             
             Button(action: {
                 viewModel.resetGameRound()
-                viewModel.statusView.toggle()
+                viewModel.winStatusView.toggle()
                 //self.presentationMode.wrappedValue.dismiss()
                 
             }, label: {
@@ -107,7 +103,7 @@ struct GameWinStatusView: View {
             
             Button(action: {
                 mainMenuButtonClicked.toggle()
-                viewModel.statusView.toggle()
+                viewModel.winStatusView.toggle()
                 //    showHomeView.toggle()
                 //                UIApplication.shared.windows.last?.rootViewController?.dismiss(animated: true, completion: {print("view changed")})
                 //                poo.toggle()
@@ -142,6 +138,6 @@ struct GameWinStatusView: View {
 
 struct GameWinStatusView_Previews: PreviewProvider {
     static var previews: some View {
-        GameWinStatusView(title: "you won", winStatus: true, userScore: 5, userSide: "O", botType: "easy bot", botScore: 2, botSide: "X", mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel())
+        GameWinStatusView(title: "you won", userScore: 5, userSide: "O", botType: "easy bot", botScore: 2, botSide: "X", mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel())
     }
 }
