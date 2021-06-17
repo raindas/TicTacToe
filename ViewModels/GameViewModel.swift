@@ -22,6 +22,7 @@ final class GameViewModel: ObservableObject {
     
     @Published var winStatus = ""
     
+    // sheets
     @Published var statusView = false
     
     @Published var moves:[Move?] = Array(repeating: nil, count: 9)
@@ -79,7 +80,7 @@ final class GameViewModel: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
                 winStatus = "you won"
                 statusView.toggle()
-               // resetGame()
+                // resetGame()
             }
             
             return
@@ -89,7 +90,7 @@ final class GameViewModel: ObservableObject {
         if checkForDraw(in: moves) {
             // alertItem = AlertContext.draw
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [self] in
-                resetGame()
+                resetGameRound()
             }
             return
         }
@@ -123,7 +124,7 @@ final class GameViewModel: ObservableObject {
             if checkForDraw(in: moves) {
                 // alertItem = AlertContext.draw
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [self] in
-                    resetGame()
+                    resetGameRound()
                 }
                 return
             }
@@ -228,7 +229,21 @@ final class GameViewModel: ObservableObject {
         return moves.compactMap { $0 }.count == 9
     }
     
-    func resetGame() {
+    func resetGameRound() {
         moves = Array(repeating: nil, count: 9)
+    }
+    
+    func resetEntireGame() {
+        // reset all game variables
+        gameDifficulty = ""
+        userSide = ""
+        winStatus = ""
+        playerScore = 0
+        computerScore = 0
+        
+        // reset current game round
+        resetGameRound()
+        
+        print("View Model reached, Game resetted!")
     }
 }

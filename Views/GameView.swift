@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+enum ActiveSheet: Identifiable {
+    case homeView, winStatusView
+    
+    var id: Int {
+        hashValue
+    }
+}
+
 struct GameView: View {
     
     @EnvironmentObject var viewModel: GameViewModel
@@ -17,6 +25,12 @@ struct GameView: View {
     // change speaker icon
     @State var soundOn = true
     
+    @State var mainMenuButtonClicked = false
+    @State var showMainMenuView = false
+    //sheets
+    @State var showAlert = false
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         GeometryReader {
@@ -26,7 +40,7 @@ struct GameView: View {
                 
                 VStack {
                     
-                    Text("high score : 500")
+                    Text("high score : \(String(viewModel.statusView))")
                         .font(.custom("ChocoCrunch", size: 20))
                         .foregroundColor(.white)
                     
@@ -104,6 +118,13 @@ struct GameView: View {
                             .padding()
                     }
                     
+//                    Button(action: {}) { EmptyView() }
+//                        .fullScreenCover(isPresented: $showMainMenuView, content: {
+//                        ContentView()
+//                    })
+                    
+                    NavigationLink("",destination:ContentView().navigationBarBackButtonHidden(true).navigationBarHidden(true),isActive: $showMainMenuView)
+                    
                     Spacer()
                     
                     HStack {
@@ -127,14 +148,43 @@ struct GameView: View {
                     .padding(.horizontal,30.0)
                     
                     
-                }.fullScreenCover(isPresented: self.$viewModel.statusView, content: {
+                }.fullScreenCover(isPresented: self.$viewModel.statusView, onDismiss: didDismiss, content: {
                     
-                    GameWinStatusView(title: viewModel.winStatus, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot")).environmentObject(self.viewModel)
+                    GameWinStatusView(title: viewModel.winStatus, winStatus:viewModel.statusView, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot"), mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                })
+                .alert(isPresented: $showAlert, content: {
+                    Alert(
+                        title: Text("Proceed to main menu"),
+                        message: Text("Current game will be ended, do you want to proceed?"),
+                        primaryButton: .destructive(Text("Yes")) {
+                            //print("yes selected")
+                            viewModel.resetEntireGame()
+                            showMainMenuView.toggle()
+                            //self.presentationMode.wrappedValue.dismiss()
+                        },
+                        secondaryButton: .default(Text("No"))
+                    )
                 })
             }
         }
         
         
+    }
+    
+    // the didDismiss function prevents the view from reconstructing with the view model's
+    // status view variable set to true
+    // hence, we set the view model's status view after the full screen presentation have been dismissed.
+    func didDismiss() {
+        if mainMenuButtonClicked {
+            print("dismissed and main menu button clicked!")
+            // ask the user if they really wanna end the game and proceed
+            // to home page
+            showAlert.toggle()
+            //viewModel.statusView = false
+            print(String(viewModel.statusView))
+        } else {
+            print("just dismissed!")
+        }
     }
 }
 

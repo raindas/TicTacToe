@@ -19,6 +19,8 @@ struct ContentView: View {
     // navigate to pick a side
     @State private var showPickASideView = false
     
+    @EnvironmentObject var viewModel: GameViewModel
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -43,7 +45,9 @@ struct ContentView: View {
                     Spacer()
                     
                     NavigationLink("",destination:PickASideView().navigationBarBackButtonHidden(true).navigationBarHidden(true),isActive: $showPickASideView)
-                    Button(action: {showPickASideView.toggle()}, label: {
+                    Button(action: {
+                        showPickASideView.toggle()
+                    }, label: {
                         Text("start")
                             .font(.custom("ChocoCrunch", size: 55))
                             .padding(.vertical,3.5)
