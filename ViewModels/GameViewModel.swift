@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CoreData
 
 final class GameViewModel: ObservableObject {
     let columns: [GridItem] = [GridItem(.flexible()),
@@ -29,8 +30,8 @@ final class GameViewModel: ObservableObject {
     @Published var isGameboardDisabled = false
     @Published var playerScore = 0
     @Published var computerScore = 0
-    @Published var highScore = 0
-    //@Published var alertItem: AlertItem?
+    
+    @Published var highScore: Int = UserDefaults.standard.integer(forKey: "HighScore")
     
     func getSide(player:String) -> String {
         // check user type and return user side
@@ -78,8 +79,10 @@ final class GameViewModel: ObservableObject {
         if checkWinCondition(for: .human, in: moves) {
             // alertItem = AlertContext.humanWin
             playerScore += 1
+            
             if highScore < playerScore {
                 highScore += 1
+                saveHighScore()
                 newHighScoreView.toggle()
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
@@ -251,4 +254,18 @@ final class GameViewModel: ObservableObject {
         
         print("View Model reached, Game resetted!")
     }
+    
+    // user default functions
+    // save userdefault value
+    private func saveHighScore(){
+        // get saved high score and change value to current high score
+        UserDefaults.standard.set(self.highScore, forKey: "HighScore")
+    }
+    //reset user default value
+    public func resetHighScore(){
+        // get saved high score and change value to current high score
+        self.highScore = 0
+        UserDefaults.standard.set(self.highScore, forKey: "HighScore")
+    }
+    
 }

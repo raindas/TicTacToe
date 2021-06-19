@@ -26,6 +26,10 @@ struct GameWinStatusView: View {
     
     // navigations
     @State var showHomeView = false
+    
+    // Audio manager
+    @EnvironmentObject var audioManager: AudioManager
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
@@ -127,6 +131,13 @@ struct GameWinStatusView: View {
             Spacer()
             
         }.background(BackgroundBlurView()).edgesIgnoringSafeArea(.all)
+        .onAppear{
+            if title == "you won" {
+                audioManager.playGameWinSound()
+            } else {
+                audioManager.playGameLoseSound()
+            }
+        }
     }
     
 //    func didDismiss() {
@@ -138,6 +149,6 @@ struct GameWinStatusView: View {
 
 struct GameWinStatusView_Previews: PreviewProvider {
     static var previews: some View {
-        GameWinStatusView(title: "you won", userScore: 5, userSide: "O", botType: "easy bot", botScore: 2, botSide: "X", mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel())
+        GameWinStatusView(title: "you won", userScore: 5, userSide: "O", botType: "easy bot", botScore: 2, botSide: "X", mainMenuButtonClicked: Binding.constant(false)).environmentObject(GameViewModel()).environmentObject(AudioManager())
     }
 }

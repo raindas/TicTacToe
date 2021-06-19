@@ -21,6 +21,10 @@ struct NewHighScoreView: View {
     
     // navigations
     @State var showHomeView = false
+    
+    // Audio manager
+    @EnvironmentObject var audioManager: AudioManager
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     var body: some View {
@@ -79,6 +83,9 @@ struct NewHighScoreView: View {
             }
             
         }.ignoresSafeArea()
+        .onAppear {
+            audioManager.playHighScoreSound()
+        }
         
     }
 }

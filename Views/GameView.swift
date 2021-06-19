@@ -14,13 +14,17 @@ struct GameView: View {
     // custom colors
     private var gameColor = GameColor()
     
-    // change speaker icon
-    @State var soundOn = true
     
     @State var mainMenuButtonClicked = false
     @State var showMainMenuView = false
     //sheets
     @State var showAlert = false
+    
+    // settings modal
+    @State var settingsView = false
+    
+    // Audio manager
+    @EnvironmentObject var audioManager: AudioManager
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -32,7 +36,7 @@ struct GameView: View {
                 
                 VStack {
                     
-                    Text("high score : \(String(viewModel.winStatusView))")
+                    Text("high score : \(String(viewModel.highScore))")
                         .font(.custom("ChocoCrunch", size: 20))
                         .foregroundColor(.white)
                     
@@ -102,13 +106,22 @@ struct GameView: View {
                                                 .font(.custom("Maler", size: 82))
                                                 .foregroundColor(viewModel.determinePlayerColor(indicator: viewModel.moves[i]? .indicator ?? ""))
                                         }.onTapGesture {
+                                            audioManager.playGameTapSound()
                                             viewModel.processPlayerMove(for: i)
                                         }
                                     }
                                 }
                             }.disabled(viewModel.isGameboardDisabled)
                             .padding()
-                    }
+                    }.fullScreenCover(isPresented: self.$viewModel.winStatusView, onDismiss: didDismiss, content: {
+                        
+                        if viewModel.newHighScoreView {
+                            NewHighScoreView(highScore: viewModel.highScore, mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                        } else {
+                            GameWinStatusView(title: viewModel.winStatus, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot"), mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
+                        }
+                        
+                    })
                     
 //                    Button(action: {}) { EmptyView() }
 //                        .fullScreenCover(isPresented: $showMainMenuView, content: {
@@ -120,35 +133,30 @@ struct GameView: View {
                     Spacer()
                     
                     HStack {
-                        
-                        if soundOn {
-                            Button(action: {soundOn.toggle()}, label: {
-                                Image(systemName: "speaker.fill")
-                            })
-                        } else {
-                            Button(action: {soundOn.toggle()}, label: {
-                                Image(systemName: "speaker.slash.fill")
-                            })
-                        }
+                        Button(action: {
+                            audioManager.stopSound()
+                            audioManager.soundOn.toggle()
+                        }, label: {
+                            Image(systemName: audioManager.soundOn ? "speaker.fill" : "speaker.slash.fill")
+                        })
                         Spacer()
-                        Image(systemName: "house.fill")
+                        Button(action: {showAlert.toggle()}, label: {
+                            Image(systemName: "house.fill")
+                        })
                         Spacer()
-                        Image(systemName: "gearshape.fill")
+                        Button(action: {settingsView.toggle()}, label: {
+                            Image(systemName: "gearshape.fill")
+                                .sheet(isPresented: $settingsView, content: {
+                                    SettingsView()
+                                })
+                        })
                     }
                     .foregroundColor(gameColor.yellow)
                     .font(.system(size: 40.0))
                     .padding(.horizontal,30.0)
                     
                     
-                }.fullScreenCover(isPresented: self.$viewModel.winStatusView, onDismiss: didDismiss, content: {
-                    
-                    if viewModel.newHighScoreView {
-                        NewHighScoreView(highScore: viewModel.highScore, mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
-                    } else {
-                        GameWinStatusView(title: viewModel.winStatus, userScore: viewModel.playerScore, userSide: viewModel.getSide(player: "user"), botType: viewModel.gameDifficulty, botScore: viewModel.computerScore, botSide: viewModel.getSide(player: "bot"), mainMenuButtonClicked: $mainMenuButtonClicked).environmentObject(self.viewModel)
-                    }
-                    
-                })
+                }
                 .alert(isPresented: $showAlert, content: {
                     Alert(
                         title: Text("Proceed to main menu"),
@@ -156,14 +164,20 @@ struct GameView: View {
                         primaryButton: .destructive(Text("Yes")) {
                             //print("yes selected")
                             viewModel.resetEntireGame()
-                            showMainMenuView.toggle()
-                            showAlert.toggle()
+                            showMainMenuView = false
+                            //showAlert.toggle()
                             //self.presentationMode.wrappedValue.dismiss()
                         },
-                        secondaryButton: .default(Text("No"))
+                        secondaryButton: .default(Text("No")) {
+                            audioManager.playGamePlaySound()
+                            viewModel.resetGameRound()
+                        }
                     )
                 })
             }
+        }.onAppear{
+            //audioManager.stopBackgroundSound()
+            audioManager.playGamePlaySound()
         }
         
         
@@ -174,20 +188,23 @@ struct GameView: View {
     // hence, we set the view model's status view after the full screen presentation have been dismissed.
     func didDismiss() {
         if mainMenuButtonClicked {
-            print("dismissed and main menu button clicked!")
+            //print("dismissed and main menu button clicked!")
             // ask the user if they really wanna end the game and proceed
             // to home page
             showAlert.toggle()
             //viewModel.statusView = false
-            print(String(viewModel.winStatusView))
+            //print(String(viewModel.winStatusView))
         } else {
-            print("just dismissed!")
+            audioManager.playGamePlaySound()
+            //print("just dismissed!")
         }
     }
 }
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView().environmentObject(GameViewModel())
+        GameView()
+            .environmentObject(GameViewModel())
+            .environmentObject(AudioManager())
     }
 }

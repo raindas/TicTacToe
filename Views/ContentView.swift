@@ -6,20 +6,25 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct ContentView: View {
+    // view model
+    @EnvironmentObject var viewModel: GameViewModel
+    
+    // Audio manager
+    @EnvironmentObject var audioManager: AudioManager
     
     // custom colors
     let GamePink = Color.init(red: 212/255, green: 172/255, blue: 195/255, opacity: 1.0)
     let GameYellow = Color.init(red: 238/255, green: 199/255, blue: 71/255, opacity: 1.0)
     
-    // change speaker icon
-    @State var soundOn = true
+    // settings modal
+    @State var settingsView = false
     
     // navigate to pick a side
     @State private var showPickASideView = false
     
-    @EnvironmentObject var viewModel: GameViewModel
     
     var body: some View {
         NavigationView {
@@ -38,7 +43,7 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    Text("High Score : 500")
+                    Text("High Score : \(viewModel.highScore)")
                         .font(.custom("ChocoCrunch", size: 20))
                         .foregroundColor(.white)
                     
@@ -61,18 +66,19 @@ struct ContentView: View {
                     Spacer()
                     
                     HStack {
-                        
-                        if soundOn {
-                            Button(action: {soundOn.toggle()}, label: {
-                                Image(systemName: "speaker.fill")
-                            })
-                        } else {
-                            Button(action: {soundOn.toggle()}, label: {
-                                Image(systemName: "speaker.slash.fill")
-                            })
-                        }
+                        Button(action: {
+                            audioManager.stopSound()
+                            audioManager.soundOn.toggle()
+                        }, label: {
+                            Image(systemName: audioManager.soundOn ? "speaker.fill" : "speaker.slash.fill")
+                        })
                         Spacer()
-                        Image(systemName: "gearshape.fill")
+                        Button(action: {settingsView.toggle()}, label: {
+                            Image(systemName: "gearshape.fill")
+                                .sheet(isPresented: $settingsView, content: {
+                                    SettingsView()
+                                })
+                        })
                     }
                     .foregroundColor(GameYellow)
                     .font(.system(size: 40.0))
@@ -80,6 +86,8 @@ struct ContentView: View {
                     
                 }
             }.navigationBarHidden(true)
+        }.onAppear{
+            audioManager.playBackgroundSound()
         }
     }
 }
@@ -87,5 +95,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(GameViewModel())
+            .environmentObject(AudioManager())
     }
 }
