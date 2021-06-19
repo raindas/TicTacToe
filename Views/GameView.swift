@@ -164,11 +164,12 @@ struct GameView: View {
                         primaryButton: .destructive(Text("Yes")) {
                             //print("yes selected")
                             viewModel.resetEntireGame()
-                            showMainMenuView = false
+                            showMainMenuView.toggle()
                             //showAlert.toggle()
                             //self.presentationMode.wrappedValue.dismiss()
                         },
                         secondaryButton: .default(Text("No")) {
+                            mainMenuButtonClicked = false
                             audioManager.playGamePlaySound()
                             viewModel.resetGameRound()
                         }

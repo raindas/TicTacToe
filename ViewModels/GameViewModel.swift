@@ -252,7 +252,7 @@ final class GameViewModel: ObservableObject {
         // reset current game round
         resetGameRound()
         
-        print("View Model reached, Game resetted!")
+       // print("View Model reached, Game resetted!")
     }
     
     // user default functions

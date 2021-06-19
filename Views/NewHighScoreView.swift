@@ -47,6 +47,7 @@ struct NewHighScoreView: View {
                 Spacer()
                 
                 Button(action: {
+                    mainMenuButtonClicked = false
                     viewModel.resetGameRound()
                     viewModel.winStatusView.toggle()
                     viewModel.newHighScoreView.toggle()

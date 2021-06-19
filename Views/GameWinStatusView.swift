@@ -89,6 +89,7 @@ struct GameWinStatusView: View {
             Spacer()
             
             Button(action: {
+                mainMenuButtonClicked = false
                 viewModel.resetGameRound()
                 viewModel.winStatusView.toggle()
                 //self.presentationMode.wrappedValue.dismiss()
