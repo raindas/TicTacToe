@@ -1,5 +1,27 @@
 # TicTacToe
  Tic Tac Toe game developed in SwiftUI
+ 
+ 
+## Requirements
+
+- macOS 11.1 Big Sur
+- Xcode 12.3
+- iOS 14
+
+## Getting Started
+
+Clone the Repository
+
+## Royalty free audio file sources
+- [mixkit.co](https://mixkit.co/free-sound-effects/game/?page=3)
+- [dl-sounds.com](https://www.dl-sounds.com/royalty-free/island-strums/)
+
+## Contact me
+### Get in touch with me
+- [Twitter](https://twitter.com/iamraindas)
+- [Instagram](https://www.instagram.com/president_raindas/)
+- [Email - presidentraindas@gmail.com](mailto:presidentraindas@gmail.com)
+- [Email 2 - adesanyasegun299@outlook.com](mailto:adesanyasegun299@outlook.com)
 
 ## Screenshots
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 58 33](https://user-images.githubusercontent.com/65086989/122658023-80a08080-d160-11eb-9c51-4676f760bd02.png)
