@@ -23,6 +23,8 @@ struct GameView: View {
     // settings modal
     @State var settingsView = false
     
+    @State var show = false
+    
     // Audio manager
     @EnvironmentObject var audioManager: AudioManager
     
@@ -123,11 +125,6 @@ struct GameView: View {
                         
                     })
                     
-//                    Button(action: {}) { EmptyView() }
-//                        .fullScreenCover(isPresented: $showMainMenuView, content: {
-//                        ContentView()
-//                    })
-                    
                     NavigationLink("",destination:ContentView().navigationBarBackButtonHidden(true).navigationBarHidden(true),isActive: $showMainMenuView)
                     
                     Spacer()
@@ -140,7 +137,13 @@ struct GameView: View {
                             Image(systemName: audioManager.soundOn ? "speaker.fill" : "speaker.slash.fill")
                         })
                         Spacer()
-                        Button(action: {showAlert.toggle()}, label: {
+                        Button(action: {
+                            withAnimation(.linear(duration: 0.3)){
+                                show.toggle()
+                            }
+                                //showAlert.toggle()
+                            
+                        }, label: {
                             Image(systemName: "house.fill")
                         })
                         Spacer()
@@ -157,25 +160,9 @@ struct GameView: View {
                     
                     
                 }
-                .alert(isPresented: $showAlert, content: {
-                    Alert(
-                        title: Text("Proceed to main menu"),
-                        message: Text("Current game will be ended, do you want to proceed?"),
-                        primaryButton: .destructive(Text("Yes")) {
-                            //print("yes selected")
-                            viewModel.resetEntireGame()
-                            showMainMenuView.toggle()
-                            //showAlert.toggle()
-                            //self.presentationMode.wrappedValue.dismiss()
-                        },
-                        secondaryButton: .default(Text("No")) {
-                            mainMenuButtonClicked = false
-                            audioManager.playGamePlaySound()
-                            viewModel.resetGameRound()
-                        }
-                    )
-                })
             }
+            
+            AlertPopupView(show: $show, showMainMenuView: $showMainMenuView, mainMenuButtonClicked: $mainMenuButtonClicked)
         }.onAppear{
             //audioManager.stopBackgroundSound()
             audioManager.playGamePlaySound()
@@ -192,7 +179,7 @@ struct GameView: View {
             //print("dismissed and main menu button clicked!")
             // ask the user if they really wanna end the game and proceed
             // to home page
-            showAlert.toggle()
+            show.toggle()
             //viewModel.statusView = false
             //print(String(viewModel.winStatusView))
         } else {

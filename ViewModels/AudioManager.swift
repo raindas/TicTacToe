@@ -31,6 +31,7 @@ final class AudioManager: ObservableObject {
     public func playBackgroundSound() {
         if soundOn {
             loadSound(filename: backgroundSound, type: "mp3")
+            self.audioPlayer.numberOfLoops = 5
             self.audioPlayer.play()
         }
         return
@@ -39,6 +40,7 @@ final class AudioManager: ObservableObject {
     public func playGamePlaySound() {
         if soundOn {
             loadSound(filename: gamePlaySound, type: "wav")
+            self.audioPlayer.numberOfLoops = 5
             self.audioPlayer.play()
         }
         return
