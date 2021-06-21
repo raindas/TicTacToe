@@ -32,6 +32,7 @@ Clone the Repository
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 59 02](https://user-images.githubusercontent.com/65086989/122658037-8eee9c80-d160-11eb-9ae5-5958dc7ae762.png)
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 59 11](https://user-images.githubusercontent.com/65086989/122658038-90b86000-d160-11eb-8f76-c4ba55fa78b9.png)
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 59 20](https://user-images.githubusercontent.com/65086989/122658039-91e98d00-d160-11eb-8cbc-6487b5c984f8.png)
+![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-21 at 23 57 12](https://user-images.githubusercontent.com/65086989/122838054-27198c80-d2ed-11eb-8a46-c8dc1b0a4dcc.png)
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 59 23](https://user-images.githubusercontent.com/65086989/122658040-92822380-d160-11eb-9386-ef3146c1794d.png)
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 21 59 33](https://user-images.githubusercontent.com/65086989/122658042-93b35080-d160-11eb-890d-be41a1ecf610.png)
 ![Simulator Screen Shot - iPhone 12 Pro Max - 2021-06-19 at 22 00 00](https://user-images.githubusercontent.com/65086989/122658043-957d1400-d160-11eb-91a6-6a8c964e5b9d.png)
